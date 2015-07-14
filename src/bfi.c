@@ -19,9 +19,12 @@ int main(int argc, char *argv[]){
     // doing everything on the stack for speed.
     // resizing, multiply by 2 once limit reached. 
     // divide by 2 after reaching (max_ptr / 2) * .75.
-    char mem[16]; 
-    int index = 0;
-
+    unsigned int size = 16;
+    unsigned int mem[size]; 
+    unsigned int index = 0;
+    
+    // store the highest index written to so that we can downsize the memory.
+    unsigned int max_index = 0;
     
     //keep track of current char
     char curr;
@@ -31,12 +34,31 @@ int main(int argc, char *argv[]){
 
             // increment value at ptr
             case '+':
+                //increase max index if needed
+                if(index > max_index){
+                    max_index = index;
+                }
+                
+                //TODO: expand mem if needed
+                
                 mem[index]++;
+                
                 break;
 
             // decrement value at ptr
             case '-':
                 mem[index]--;
+
+
+                // if necessary, find the nex max_index from the old one
+                if(index == max_index && mem[index] == 0){
+                    for(int i = index; i >= 0; i--){
+                        if(mem[i] != 0){
+                            max_index = i;
+                        }
+                    }
+                }
+
                 break;
             
             // increment index of ptr
@@ -51,17 +73,18 @@ int main(int argc, char *argv[]){
 
             // output value at ptr
             case '.':
-                
+                putchar(mem[index]);
                 break;
             
             // store one byte of user input in ptr
             case ',':
-
+                mem[index] = getchar();
                 break;
 
             /* TODO JUMP STATEMENTS */
+    
+        }
     }
-
 
     fclose(src);
     return(0);

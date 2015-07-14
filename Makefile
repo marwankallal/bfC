@@ -1,6 +1,6 @@
 TARGET=bfi
 CC = gcc
-CFLAGS += -Wall -Wextra -Werror -O3
+CFLAGS += -std=c11 -Wall -Wextra -Werror -O3
 LINKER   = gcc -o
 SRCDIR   = src
 OBJDIR   = obj

@@ -5,7 +5,8 @@ Memory Layout
 =============
 
 Memory is laid out as an effectively infinite array, with a pointer at the first byte.
-The maximum value for each ptr is 2^8-1 (255)
+The maximum index is whatever MAX\_UINT is on your system (usually 2^32-1).
+The maximum value in each ptr is also MAX\_UINT.
  _ _ _ _ _ _
 |_|_|_|_|_|_|...
  ^
