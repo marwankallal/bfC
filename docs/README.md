@@ -17,5 +17,5 @@ To use the interpreter, execute `./bfi /path/to/file.bf`. It will print any outp
 If you want to compile it, there are two different options.
 Using `./bfc /path/to/file.bf` will compile the file to assembly using the bfC library, and then call `nasm` to properly assemble it into binary. 
 
-Using `./bfC -c /path/to/file.bf` (note the -c flag) will convert the `.bf` file to C before using your favorite compiler to get a nice executable. 
+Using `./bfc -c /path/to/file.bf` (note the -c flag) will convert the `.bf` file to C before using your favorite compiler to get a nice executable. 
 You can mess with the makefile to change the flags and optimizations etc!
