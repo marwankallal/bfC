@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 
 int main(int argc, char *argv[]){
     
@@ -16,11 +18,14 @@ int main(int argc, char *argv[]){
 
     // using chars (1 byte each). TODO: add flags for different max size? 
     // start with 16 bytes. We'll resize (both up and down) as needed.
-    // doing everything on the stack for speed.
     // resizing, multiply by 2 once limit reached. 
     // divide by 2 after reaching (max_ptr / 2) * .75.
     unsigned int size = 16;
-    unsigned int mem[size]; 
+    
+    // allocate and zero initial mem block
+    unsigned char *mem = (unsigned char *) malloc(size);
+    memset(mem, 0, size);
+
     unsigned int index = 0;
     
     // store the highest index written to so that we can downsize the memory.
@@ -40,7 +45,12 @@ int main(int argc, char *argv[]){
                 }
                 
                 //TODO: expand mem if needed
-                
+                while(index >= size){
+                    mem = realloc(mem, size * 2);
+                    memset(mem + size, 0, size);
+                    size *= 2;
+                }
+
                 mem[index]++;
                 
                 break;
@@ -50,7 +60,7 @@ int main(int argc, char *argv[]){
                 mem[index]--;
 
 
-                // if necessary, find the nex max_index from the old one
+                // if necessary, find the new max_index from the old one
                 if(index == max_index && mem[index] == 0){
                     for(int i = index; i >= 0; i--){
                         if(mem[i] != 0){
