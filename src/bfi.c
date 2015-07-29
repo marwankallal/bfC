@@ -15,15 +15,28 @@ int main(int argc, char *argv[]){
     }
     
     // open file
-    FILE *src = fopen(argv[1], "r");
-    if(!src){
+    FILE *srcf = fopen(argv[1], "rb");
+    if(!srcf){
         printf("Could not open file %s", argv[1]);
     }
+
+    // load the file into memory. This saves time by buffering and makes
+    // jump commands significantly faster.
+    fseek(srcf, 0, SEEK_END);
+    long flen = ftell(srcf);
+    fseek(srcf, 0, SEEK_SET);
+    
+    char src[flen];
+    fread(src, flen, 1, srcf);
+    fclose(srcf);
+
+    // keep track of position in file
+    int pos = 0;
 
     // using chars (1 byte each). TODO: add flags for different max size? 
     // start with 16 bytes. We'll resize (both up and down) as needed.
     // resizing, multiply by 2 once limit reached. 
-    // divide by 2 after reaching (max_ptr / 2) * .75.
+    // divide by 2 after reaching (max_ptr) * .75.
     unsigned int size = MIN_SIZE;
     
     // allocate and zero initial mem block
@@ -37,11 +50,8 @@ int main(int argc, char *argv[]){
     // store low threshold so we dont have to recalculate
     unsigned int min_mem = size * 0.75 + 1;
     
-    // keep track of current char
-    char curr;
-
-    while((curr = fgetc(src)) != EOF){
-        switch(curr){
+    for(; pos < flen; pos++){
+        switch(src[pos]){
 
             // increment value at ptr
             case '+':
@@ -94,12 +104,19 @@ int main(int argc, char *argv[]){
                 mem[index] = getchar();
                 break;
 
-            /* TODO JUMP STATEMENTS */
+            // forward jump
+            case '[':
+
+                break;
+            
+            //backwards jump
+            case ']':
+
+                break;
     
         }
     }
 
-    fclose(src);
     return(0);
 }
 

@@ -25,8 +25,8 @@ Operators
 `.` : Outputs the value at ptr.
 `,` : Stores one byte of user input in ptr.
 
-`[` : Beginning of loop. If the value at ptr is zero, then jump to the matching `]`. 
-`]` : End of loop. If the value at ptr is non-zero, jump back to the matching `[`. 
+`[` : If the value at ptr is zero, then jump to the matching `]`. 
+`]` : If the value at ptr is non-zero, jump back to the matching `[`. 
 NOTE: all `[` characters must be properly matched with a `]`.
 
 `.` : Outputs the byte at ptr to stdout.
