@@ -2,6 +2,10 @@
 #include <string.h>
 #include <stdlib.h>
 
+#define MIN_SIZE 16
+
+void resize_mem(unsigned char *mem, unsigned int index, unsigned int size, unsigned int max_index, unsigned int min_mem);
+
 int main(int argc, char *argv[]){
     
     // handle args
@@ -20,7 +24,7 @@ int main(int argc, char *argv[]){
     // start with 16 bytes. We'll resize (both up and down) as needed.
     // resizing, multiply by 2 once limit reached. 
     // divide by 2 after reaching (max_ptr / 2) * .75.
-    unsigned int size = 16;
+    unsigned int size = MIN_SIZE;
     
     // allocate and zero initial mem block
     unsigned char *mem = (unsigned char *) malloc(size);
@@ -30,8 +34,10 @@ int main(int argc, char *argv[]){
     
     // store the highest index written to so that we can downsize the memory.
     unsigned int max_index = 0;
+    // store low threshold so we dont have to recalculate
+    unsigned int min_mem = size * 0.75 + 1;
     
-    //keep track of current char
+    // keep track of current char
     char curr;
 
     while((curr = fgetc(src)) != EOF){
@@ -39,26 +45,20 @@ int main(int argc, char *argv[]){
 
             // increment value at ptr
             case '+':
-                //increase max index if needed
+                // increase max index if needed
                 if(index > max_index){
                     max_index = index;
                 }
+               
+                resize_mem(mem, index, size, max_index, min_mem); 
                 
-                //TODO: expand mem if needed
-                while(index >= size){
-                    mem = realloc(mem, size * 2);
-                    memset(mem + size, 0, size);
-                    size *= 2;
-                }
-
                 mem[index]++;
                 
                 break;
 
             // decrement value at ptr
-            case '-':
+            case '-': 
                 mem[index]--;
-
 
                 // if necessary, find the new max_index from the old one
                 if(index == max_index && mem[index] == 0){
@@ -68,7 +68,9 @@ int main(int argc, char *argv[]){
                         }
                     }
                 }
-
+                
+                resize_mem(mem, index, size, max_index, min_mem); 
+                
                 break;
             
             // increment index of ptr
@@ -88,6 +90,7 @@ int main(int argc, char *argv[]){
             
             // store one byte of user input in ptr
             case ',':
+                resize_mem(mem, index, size, max_index, min_mem); 
                 mem[index] = getchar();
                 break;
 
@@ -99,3 +102,22 @@ int main(int argc, char *argv[]){
     fclose(src);
     return(0);
 }
+
+void resize_mem(unsigned char *mem, unsigned int index, unsigned int size, unsigned int max_index, unsigned int min_mem){
+
+    // expand mem if needed
+    while(index >= size){
+        mem = realloc(mem, size * 2);
+        memset(mem + size, 0, size);
+        size *= 2;
+    }
+
+    // reduce memory if possible
+    if(max_index < min_mem && min_mem > MIN_SIZE){
+        mem = realloc(mem, min_mem);
+        size = min_mem;
+    }
+
+    min_mem = size * 0.75 + 1;
+    return;
+} 
