@@ -5,6 +5,8 @@
 #define MIN_SIZE 16
 
 void resize_mem(unsigned char *mem, unsigned int index, unsigned int size, unsigned int max_index, unsigned int min_mem);
+int find_match_open(unsigned int pos, char *src);
+int find_match_closed(unsigned int pos, char *src);
 
 int main(int argc, char *argv[]){
     
@@ -106,12 +108,16 @@ int main(int argc, char *argv[]){
 
             // forward jump
             case '[':
-
+                if(mem[index] == 0){
+                    pos = find_match_open(pos, src);
+                }
                 break;
             
             //backwards jump
             case ']':
-
+                if(mem[index] != 0){
+                    pos = find_match_closed(pos, src);
+                }
                 break;
     
         }
@@ -119,6 +125,37 @@ int main(int argc, char *argv[]){
 
     return(0);
 }
+
+int find_match_open(unsigned int pos, char *src){
+    pos++;
+    for(int weight = 1; weight != 0; pos++){
+        switch(src[pos]){
+            case '[':
+                weight++;
+                break;
+            case ']':
+                weight--;
+                break;
+        }
+    }
+    return pos;
+}
+
+int find_match_closed(unsigned int pos, char *src){
+    pos--;
+    for(int weight = 1; weight != 0; pos--){
+        switch(src[pos]){
+            case ']':
+                weight++;
+                break;
+            case '[':
+                weight--;
+                break;
+        }
+    }
+    return pos;
+}
+
 
 void resize_mem(unsigned char *mem, unsigned int index, unsigned int size, unsigned int max_index, unsigned int min_mem){
 
