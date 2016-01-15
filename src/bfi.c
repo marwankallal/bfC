@@ -12,7 +12,7 @@ int main(int argc, char *argv[]){
     
     // handle args
     if(argc != 2){
-        printf("usage: ./bfi /path/to/file");
+        printf("usage: ./bfi /path/to/file.bf");
         return(-1);
     }
     
