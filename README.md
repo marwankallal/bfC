@@ -12,7 +12,11 @@ You will need to have `make` and `gcc` installed.
 
 Usage
 =====
-To use the interpreter, execute `./bfi /path/to/file.bf`. It will print any output to `stdout`.
+To use the interpreter, execute `./bfi /path/to/file.bf`. Output is sent to `stdout`.
+
+To use the preprocessor, execute `./bfc /path/to/input.bf /path/to/output.bfc`.
+
+To run your preprocessed code, execute `./bf /path/to/file.bfc`.  Output is sent to `stdout`.
 
 Notes/Warnings
 ==============
