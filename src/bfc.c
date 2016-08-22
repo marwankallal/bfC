@@ -33,10 +33,10 @@ int main(int argc, char **argv){
     for(; pos < flen; pos++){
         switch(src[pos]){
             case '[':
-                //TODO:find matching brace and replace [ with pos
+                //TODO:find matching brace and replace [ with {pos}
                 break;
             case ']':
-                //todo:find matching brace and replace ] with pos
+                //todo:find matching brace and replace ] with (pos)
                 break;
         }
     }
